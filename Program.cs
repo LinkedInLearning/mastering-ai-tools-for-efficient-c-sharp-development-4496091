@@ -1,56 +1,90 @@
 ﻿using System;
 
+enum Choice
+{
+    Rock,
+    Paper,
+    Scissors
+}
+
+class Player
+{
+    public Choice MakeChoice(string input)
+    {
+        return (Choice)Enum.Parse(typeof(Choice), input, true);
+    }
+}
+
+class ComputerPlayer : Player
+{
+    private Random random = new Random();
+
+    public Choice MakeRandomChoice()
+    {
+        Choice[] choices = { Choice.Rock, Choice.Paper, Choice.Scissors };
+        return choices[random.Next(choices.Length)];
+    }
+}
+
+class GameRule
+{
+    public string DetermineWinner(Choice userChoice, Choice computerChoice)
+    {
+        if (userChoice == computerChoice)
+        {
+            return $"Both players selected {userChoice}. It's a tie!";
+        }
+        else if (userChoice == Choice.Rock && computerChoice == Choice.Scissors ||
+                 userChoice == Choice.Scissors && computerChoice == Choice.Paper ||
+                 userChoice == Choice.Paper && computerChoice == Choice.Rock)
+        {
+            return $"You win! {userChoice} beats {computerChoice}.";
+        }
+        else
+        {
+            return $"You lose! {computerChoice} beats {userChoice}.";
+        }
+    }
+}
+
+class Game
+{
+    private Player player = new Player();
+    private ComputerPlayer computerPlayer = new ComputerPlayer();
+    private GameRule gameRule = new GameRule();
+
+    public void Start()
+    {
+        while (true)
+        {
+            Console.WriteLine("Enter rock, paper, or scissors (or 'quit' to exit):");
+            string input = Console.ReadLine().ToLower();
+    
+            if (input == "quit")
+            {
+                Console.WriteLine("Game exited.");
+                break;
+            }
+    
+            if (!Enum.TryParse(input, true, out Choice userChoice))
+            {
+                Console.WriteLine("Invalid choice, please try again.");
+                continue;
+            }
+            
+            Choice computerChoice = computerPlayer.MakeRandomChoice();
+    
+            string result = gameRule.DetermineWinner(userChoice, computerChoice);
+            Console.WriteLine(result);
+        }
+    }
+}
+
 class Program
 {
     static void Main(string[] args)
     {
-        string[] choices = { "rock", "paper", "scissors" };
-        Random random = new Random();
-        string computerChoice = choices[random.Next(choices.Length)];
-
-        string userChoice = "";
-        bool isValidChoice = false;
-
-        while (!isValidChoice)
-        {
-            Console.WriteLine("Enter rock, paper, or scissors (or 'quit' to exit):");
-            userChoice = Console.ReadLine().ToLower();
-
-            if (userChoice == "quit")
-            {
-                Console.WriteLine("Game exited.");
-                return; // Exit the program
-            }
-
-            foreach (var choice in choices)
-            {
-                if (userChoice == choice)
-                {
-                    isValidChoice = true;
-                    break;
-                }
-            }
-
-            if (!isValidChoice)
-            {
-                Console.WriteLine("Invalid choice, please try again.");
-            }
-        }
-
-        // The rest of the game logic goes here
-        if (userChoice == computerChoice)
-        {
-            Console.WriteLine($"Both players selected {userChoice}. It's a tie!");
-        }
-        else if (userChoice == "rock" && computerChoice == "scissors" ||
-                 userChoice == "scissors" && computerChoice == "paper" ||
-                 userChoice == "paper" && computerChoice == "rock")
-        {
-            Console.WriteLine($"You win! {userChoice} beats {computerChoice}.");
-        }
-        else
-        {
-            Console.WriteLine($"You lose! {computerChoice} beats {userChoice}.");
-        }
+        Game game = new Game();
+        game.Start();
     }
 }
