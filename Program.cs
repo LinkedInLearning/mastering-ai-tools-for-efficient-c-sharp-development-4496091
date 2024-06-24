@@ -1,5 +1,24 @@
-﻿using System;
+﻿//--------------------------------------------------------------------------------------
+// Program.cs
+//
+// This file contains the implementation of a simple Rock, Paper, Scissors game played
+// between a human player and the computer. It demonstrates basic concepts of OOP such
+// as inheritance, encapsulation, and polymorphism through the use of classes and enums.
+// The game continues in a loop until the user decides to quit by entering 'quit'.
+//
+// Classes:
+// - Choice: Enum representing the possible choices in the game.
+// - Player: Represents a player in the game, capable of making a choice.
+// - ComputerPlayer: Inherits from Player, makes random choices.
+// - GameRule: Contains the logic to determine the winner of the game.
+// - Game: Orchestrates the game flow, interacting with the user and managing game state.
+// - Program: Contains the entry point of the application, where the game is started.
+//
+// Author: Jesse Freeman
+//--------------------------------------------------------------------------------------
+using System;
 
+// Enum for the choices
 enum Choice
 {
     Rock,
@@ -7,6 +26,12 @@ enum Choice
     Scissors
 }
 
+/// <summary>
+/// Represents a player in the game. Provides a method to make a choice based on a string input.
+/// </summary>
+/// <remarks>
+/// The <c>MakeChoice</c> method converts a string input into a <c>Choice</c> enum value, ignoring case sensitivity.
+/// </remarks>
 class Player
 {
     public Choice MakeChoice(string input)
@@ -21,7 +46,10 @@ class ComputerPlayer : Player
 
     public Choice MakeRandomChoice()
     {
+        // Array of possible choices
         Choice[] choices = { Choice.Rock, Choice.Paper, Choice.Scissors };
+        
+        // Randomly select a choice
         return choices[random.Next(choices.Length)];
     }
 }
